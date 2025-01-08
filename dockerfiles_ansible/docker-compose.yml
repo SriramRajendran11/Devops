@@ -1,0 +1,37 @@
+services:
+  ansible_control:
+    image: ansible-docker     
+    hostname: controlnode
+    container_name: ansible_control
+    command: sh -c "cp ~/.ssh/id* /mnt/tmp && exec /mnt/tmp/runforever.sh"
+    volumes:
+      - ./scripts:/mnt/tmp  
+  ansible_node1:
+    image: ansible-node     
+    hostname: ansiblenode1
+    container_name: ansible_node1
+    depends_on:
+      - ansible_control    
+    command: sh -c "exec /mnt/tmp/init.sh"
+    volumes:
+      - ./scripts:/mnt/tmp  
+  ansible_node2:
+    image: ansible-node     
+    hostname: ansiblenode2
+    container_name: ansible_node2
+    depends_on:
+      - ansible_control  
+    command: sh -c "exec /mnt/tmp/init.sh"
+    volumes:
+      - ./scripts:/mnt/tmp   
+  ansible_node3:
+    image: ansible-node     
+    hostname: ansiblenode3
+    container_name: ansible_node3
+    depends_on:
+      - ansible_control  
+    command: sh -c "exec /mnt/tmp/init.sh"
+    ports: 
+      - 80:99
+    volumes:
+      - ./scripts:/mnt/tmp  
