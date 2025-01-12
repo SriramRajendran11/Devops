@@ -3,7 +3,7 @@ services:
     image: ansible-docker     
     hostname: controlnode
     container_name: ansible_control
-    command: sh -c "cp ~/.ssh/id* /mnt/tmp && exec /mnt/tmp/runforever.sh"
+    command: sh -c "exec /mnt/tmp/runforever.sh"
     volumes:
       - ./scripts:/mnt/tmp  
   ansible_node1:
