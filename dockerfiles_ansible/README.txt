@@ -9,34 +9,34 @@ Step 01:
 	# now start the nodes
 	docker compose up -d 
 	# add keys from nodes to master
-	docker exec -it controlnode /bin/bash
-		ssh-keyscan -H ansiblenode1 >> $HOME/.ssh/known_hosts # running inside docker
-		ssh-keyscan -H ansiblenode2 >> $HOME/.ssh/known_hosts # running inside docker
-                ssh-keyscan -H ansiblenode3 >> $HOME/.ssh/known_hosts # running inside docker
+	docker exec -it ansible_control /bin/bash
+		ssh-keyscan -H ansible_node1 >> $HOME/.ssh/known_hosts # running inside docker
+		ssh-keyscan -H ansible_node2 >> $HOME/.ssh/known_hosts # running inside docker
+                ssh-keyscan -H ansible_node3 >> $HOME/.ssh/known_hosts # running inside docker
 
 
 Step 02:
 You will need to create a user ansible if not already created and set its password in the first time on each node
 e.g. usage: 
-	 docker exec -it ansiblenode1 /bin/bash 
+	 docker exec -it ansible_node1 /bin/bash 
 	           sudo bash 
 	 	   passwd ansible
 		   exit
 		   exit 
-	 [Repeat for ansiblenode2, ansiblenode3.....] 
+	 [Repeat for ansible_node2, ansible_node3.....] 
 
 Step 03:
 Next Connect from Ansible-master to each off the node 
 e.g usage
 	docker exec -it controlnode /bin/bash 
-		ssh ansible@ansiblenode1
+		ssh ansible@ansible_node1
 		[ you will be asked to enter password ] 
-	 	ssh-copy-id ansible@ansiblenode1
+	 	ssh-copy-id ansible@ansible_node1
 		[ you will be asked to enter password ] 
-		ssh ansible@ansiblenode1
+		ssh ansible@ansible_node1
 		[no password will be required now] 
 	
-		[Repeat for ansiblenode2, ansiblebnode3... ] 
+		[Repeat for ansible_node2, ansibleb_node3... ] 
 
 The usage is you do a docker exec to the master node and ssh-copy-id its public key to nodes for user ansible. 
 Then corresponding ssh's will not require password and the master node can be used to run playbooks on the nodes. 
@@ -51,9 +51,9 @@ Add inventory file
 			# as root
 			mkdir -p /etc/ansible/
 			touch /etc/ansible/hosts
-			echo ansiblenode1 >> /etc/ansible/hosts
-			echo ansiblenode2 >> /etc/ansible/hosts
-			echo ansiblenode3 >> /etc/ansible/hosts		
+			echo ansible_node1 >> /etc/ansible/hosts
+			echo ansible_node2 >> /etc/ansible/hosts
+			echo ansible_node3 >> /etc/ansible/hosts		
 			chown -R ansible /etc/ansible
 			exit
 		exit
