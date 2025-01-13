@@ -1,16 +1,15 @@
-** Sample Code and Presentations
+# Sample Code and Presentations
 This contains the scripts for installing minikube on a WSL2 (windows 11 Home Edition) Ubuntu 22.04 LTS distro. 
 It also contains scripts for installing prometheus, Grafana and ELK stacks
 Adapt as neccessary 
 
 It also contains scripts for some docker and vagrant/virtual box demos
 
-** SW
+# SW
 1. WSL2 Ubuntu 22/24 instance (NB: DOcker Desktop integration is turned off for same)
 2. Optional: Oracle Virtual box/Vagrant
 
-
-** How to get started
+# How to get started
 1. Install WSL2 (with Updates)
 2. Install Ubuntu 22. 04 from Microsoft Store
 3. Log in to Ubuntu 
@@ -45,7 +44,7 @@ It also contains scripts for some docker and vagrant/virtual box demos
         ./install_minikube.sh 
 
 
-** Folder Structure
+## Folder Structure
 1. docker
     1.  jenkins - contains instructions on how to build and run jenkins as a docker image
     2.  lamp-dockercompose - A sample LAMP application using docker-compose
