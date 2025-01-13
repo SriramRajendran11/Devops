@@ -1,4 +1,4 @@
-# Getting Started with Minikube
+Getting Started with Minikube
 
 1. navigate to this folder and run
    
