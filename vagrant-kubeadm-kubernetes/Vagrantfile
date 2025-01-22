@@ -11,6 +11,7 @@ IP_START = Integer(IP_SECTIONS.captures[1])
 NUM_WORKER_NODES = settings["nodes"]["workers"]["count"]
 
 Vagrant.configure("2") do |config|
+  config.vm.boot_timeout=900
   config.vm.provision "shell", env: { "IP_NW" => IP_NW, "IP_START" => IP_START, "NUM_WORKER_NODES" => NUM_WORKER_NODES }, inline: <<-SHELL
       apt-get update -y
       echo "$IP_NW$((IP_START)) controlplane" >> /etc/hosts
@@ -24,7 +25,7 @@ Vagrant.configure("2") do |config|
   else
     config.vm.box = settings["software"]["box"]
   end
-  config.vm.box_check_update = true
+  config.vm.box_check_update = false #true
 
   config.vm.define "controlplane" do |controlplane|
     controlplane.vm.hostname = "controlplane"
@@ -90,7 +91,9 @@ Vagrant.configure("2") do |config|
 
       # Only install the dashboard after provisioning the last worker (and when enabled).
       if i == NUM_WORKER_NODES and settings["software"]["dashboard"] and settings["software"]["dashboard"] != ""
-        node.vm.provision "shell", path: "scripts/dashboard.sh"
+        #node.vm.provision "shell", path: "scripts/dashboard.sh"
+	node.vm.provision "shell", path: "scripts/install_helm.sh" 
+	node.vm.provision "shell", path: "scripts/dashboard.sh"
       end
     end
 

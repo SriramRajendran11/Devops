@@ -14,11 +14,8 @@ if [ -n "${DASHBOARD_VERSION}" ]; then
   done
   echo 'Metrics server is ready. Installing dashboard...'
 
-echo "Deploying the dashboard..."
-  #sudo -i -u vagrant kubectl apply -f "https://raw.githubusercontent.com/kubernetes/dashboard/v${DASHBOARD_VERSION}/aio/deploy/recommended.yaml"
-  sudo -i -u vagrant helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
-  sudo -i -u vagrant helm upgrade --install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard --create-namespace --namespace kubernetes-dashboard --version "${DASHBOARD_VERSION}"
- 
+  sudo -i -u vagrant kubectl create namespace kubernetes-dashboard
+
   echo "Creating the dashboard user..."
 
   cat <<EOF | sudo -i -u vagrant kubectl apply -f -
@@ -55,17 +52,14 @@ subjects:
   namespace: kubernetes-dashboard
 EOF
 
-sudo -i -u vagrant kubectl -n kubernetes-dashboard create token admin-user
-#sudo -i -u vagrant kubectl -n kubernetes-dashboard port-forward --insecure-skip-tls-verify --address 192.168.56.10,localhost svc/kubernetes-dashboard-kong-proxy 8443:443
+  echo "Deploying the dashboard..."
+  sudo -i -u vagrant kubectl apply -f "https://raw.githubusercontent.com/kubernetes/dashboard/v${DASHBOARD_VERSION}/aio/deploy/recommended.yaml"
 
-
-
-
-  sudo -i -u vagrant kubectl -n kubernetes-dashboard get secret/admin-user -o go-template="{{.data.token | base64decode}}" | sudo tee "${config_path}/token"
+  sudo -i -u vagrant kubectl -n kubernetes-dashboard get secret/admin-user -o go-template="{{.data.token | base64decode}}" >> "${config_path}/token"
   echo "The following token was also saved to: configs/token"
   cat "${config_path}/token"
-echo "Access Dashboard @ https://node02:8443/" 
-#https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/ 
-
-  sudo -i -u vagrant cp -r /home/vagrant/.kube /vagrant # copy over file..
+  echo "
+Use it to log in at:
+http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/overview?namespace=kubernetes-dashboard
+"
 fi
