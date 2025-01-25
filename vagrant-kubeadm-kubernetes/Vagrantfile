@@ -25,6 +25,7 @@ Vagrant.configure("2") do |config|
   else
     config.vm.box = settings["software"]["box"]
   end
+  #config.vm.box_version = "20241002.0.0"
   config.vm.box_check_update = false #true
 
   config.vm.define "controlplane" do |controlplane|
@@ -38,8 +39,18 @@ Vagrant.configure("2") do |config|
     controlplane.vm.provider "virtualbox" do |vb|
         vb.cpus = settings["nodes"]["control"]["cpu"]
         vb.memory = settings["nodes"]["control"]["memory"]
+	vb.name = "controlplane"
         if settings["cluster_name"] and settings["cluster_name"] != ""
-          vb.customize ["modifyvm", :id, "--groups", ("/" + settings["cluster_name"])]
+          #vb.customize ["modifyvm", :id, "--groups", ("/" + settings["cluster_name"])]
+	  #vb.customize ["modifyvm", :id, "--groups", ("/" + settings["cluster_name"]+"/"+settings["master"])]
+          if settings["cluster_name"]["groups"] 
+		#UGGH.. WRITE THIS IF CONDITION CORRECTLY.... 
+		# ASSUMPTION - 1st GROUP IS MASTER 
+		vb.customize ["modifyvm", :id, "--groups", ("/" + settings["cluster_name"]["name"]+"/"+settings["cluster_name"]["groups"][0])]
+          else
+		vb.customize ["modifyvm", :id, "--groups", ("/" + settings["cluster_name"]["name"]+"/Master")]
+	  end 
+	  
         end
     end
     controlplane.vm.provision "shell",
@@ -74,8 +85,16 @@ Vagrant.configure("2") do |config|
       node.vm.provider "virtualbox" do |vb|
           vb.cpus = settings["nodes"]["workers"]["cpu"]
           vb.memory = settings["nodes"]["workers"]["memory"]
+	  vb.name = "node0#{i}"
           if settings["cluster_name"] and settings["cluster_name"] != ""
-            vb.customize ["modifyvm", :id, "--groups", ("/" + settings["cluster_name"])]
+
+	    if settings["cluster_name"]["groups"]
+		vb.customize ["modifyvm", :id, "--groups", ("/" + settings["cluster_name"]["name"]+"/"+settings["cluster_name"]["groups"][1])]
+	    else 
+		vb.customize ["modifyvm", :id, "--groups", ("/" + settings["cluster_name"]["name"]+"/Nodes")]
+	    end
+            
+   		
           end
       end
       node.vm.provision "shell",

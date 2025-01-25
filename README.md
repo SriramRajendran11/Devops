@@ -5,9 +5,13 @@ Adapt as neccessary
 
 It also contains scripts for some docker and vagrant/virtual box demos
 
+# Change History 
+Jan 25 2025 - Added Support for creating a Debian Virtual Box using Terraform
+
 # SW
 1. WSL2 Ubuntu 22/24 instance (NB: DOcker Desktop integration is turned off for same)
 2. Optional: Oracle Virtual box/Vagrant
+3. Terraform 
 
 # How to get started
 1. Install WSL2 (with Updates)
