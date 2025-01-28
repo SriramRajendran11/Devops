@@ -14,8 +14,8 @@ provider "virtualbox" {
 resource "virtualbox_vm" "vm1" {
   name   = "debian-11"
   image  = "https://app.vagrantup.com/shekeriev/boxes/debian-11/versions/0.2/providers/virtualbox.box"
-  cpus      = 2
-  memory    = "768 mib"
+  cpus      = 3
+  memory    = "1024 mib"
   user_data = file("${path.module}/user_data")
 
   network_adapter {
@@ -27,7 +27,28 @@ resource "virtualbox_vm" "vm1" {
   }
 }
 
-output "IPAddress" {
+resource "virtualbox_vm" "vm2" {
+  name   = "debian-11-box"
+  image  = "https://app.vagrantup.com/shekeriev/boxes/debian-11/versions/0.2/providers/virtualbox.box"
+  cpus      = 4
+  memory    = "768 mib"
+  user_data = file("${path.module}/user_data")
+
+  network_adapter {
+    type           = "hostonly"
+    device         = "IntelPro1000MTDesktop"
+    #host_interface = "vboxnet1"
+    # On Windows use this instead
+    host_interface = "VirtualBox Host-Only Ethernet Adapter"
+  }
+
+} 
+
+
+output "IPAddressBox1" {
   value = element(virtualbox_vm.vm1.*.network_adapter.0.ipv4_address, 1)
 }
 
+output "IPAddressBox2" {
+  value = element(virtualbox_vm.vm2.*.network_adapter.0.ipv4_address, 1)
+}
