@@ -31,5 +31,5 @@ services:
 networks: 
   demo: 
     driver: bridge 
-    name: demo 
-    external: true 
+    name: lampnetwork
+    external: false

@@ -11,7 +11,7 @@ echo \
   $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 sudo apt-get update
-sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-sudo docker run hello-world
+sudo apt-get install -y fuse-overlayfs docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+#sudo docker run hello-world
 sudo usermod -aG docker $USER
 echo "All done. Please log out and log back in to run docker without sudo"

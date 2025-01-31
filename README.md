@@ -6,6 +6,7 @@ Adapt as neccessary
 It also contains scripts for some docker and vagrant/virtual box demos
 
 # Change History 
+Jan 31 2025 - Added support for Rootless Docker installation - USE AT YOUR OWN RISK
 Jan 25 2025 - Added Support for creating a Debian Virtual Box using Terraform
 
 # SW
