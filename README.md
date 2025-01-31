@@ -5,7 +5,50 @@ Adapt as neccessary
 
 It also contains scripts for some docker and vagrant/virtual box demos
 
-# Change History 
+# CAUTION
+I am not adding any sample files for resolv.conf or WSL Conf
+A sample file will look like this: 
+```
+[boot]
+systemd=true
+[network]
+generateResolvConf=true
+``` 
+In such cases, you will need to add the following to the /etc/resolv.conf file 
+```
+# add Google DNS server 
+nameserver 8.8.8.8
+```
+In addition, for minikube to run properly in WSL2 under rootless docker, make the following changes to %USERPROFILES%\.wslconfig 
+
+```
+[wsl2]
+memory=12GB # Limits VM memory in WSL 2 to 12 GB
+processors=4 # Makes the WSL 2 VM use four virtual processors
+kernelCommandLine = cgroup_no_v1=all
+```
+Memory and processors are "added" sugar. 
+
+Shutdown WSL2 and restart. 
+Add the following changes to /etc/fstab
+```
+cgroup2 /sys/fs/cgroup cgroup2 rw,nosuid,nodev,noexec,relatime,nsdelegate 0 0
+```
+Reboot WSL
+
+in the WSL2 instance where minikube is being added, run the following code: 
+```
+sudo mkdir -p /etc/systemd/system/user@.service.d
+cat <<EOF | sudo tee /etc/systemd/system/user@.service.d/delegate.conf
+[Service]
+Delegate=cpu cpuset io memory pids
+EOF
+sudo systemctl daemon-reload
+```
+Install minikube as normal. see the code in startminikube.sh and adapt as needed.
+
+# Change History
+Jan 31 2025 - Added Support for running minikube under rootless docker.  
 Jan 31 2025 - Added support for Rootless Docker installation - USE AT YOUR OWN RISK
 Jan 25 2025 - Added Support for creating a Debian Virtual Box using Terraform
 

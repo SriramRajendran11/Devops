@@ -1,3 +1,5 @@
+# Comment below line if using "rooted" docker
+docker context use rootless 
 # Adapt the below as necessary
 minikube start --vm-driver=docker --container-runtime=containerd --memory 4400 --cpus 4
 minikube addons enable metrics-server
