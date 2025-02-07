@@ -12,6 +12,17 @@ NUM_WORKER_NODES = settings["nodes"]["workers"]["count"]
 
 Vagrant.configure("2") do |config|
   config.vm.boot_timeout=900
+  config.vbguest.auto_update = true
+  # Update this appropriately 
+  #config.vbguest.iso_path = "./vbox.iso"  
+  config.vbguest.iso_path = "https://download.virtualbox.org/virtualbox/7.1.4/VBoxGuestAdditions_7.1.4.iso"
+  # config.vbguest.no_remote = true
+  config.vbguest.no_remote = false 
+  config.vbguest.auto_reboot = true
+  config.vbguest.installer = :Debian
+  config.vm.synced_folder ".", "/vagrant" 
+
+  # config.vm.provision "file", source: "~/vbox.iso", destination: "/vagrant/vbox.iso"
   config.vm.provision "shell", env: { "IP_NW" => IP_NW, "IP_START" => IP_START, "NUM_WORKER_NODES" => NUM_WORKER_NODES }, inline: <<-SHELL
       apt-get update -y
       echo "$IP_NW$((IP_START)) controlplane" >> /etc/hosts
@@ -26,9 +37,10 @@ Vagrant.configure("2") do |config|
     config.vm.box = settings["software"]["box"]
   end
   #config.vm.box_version = "20241002.0.0"
-  config.vm.box_check_update = false #true
+  config.vm.box_check_update = true
 
   config.vm.define "controlplane" do |controlplane|
+    controlplane.vbguest.installer_options = { allow_kernel_upgrade: true }
     controlplane.vm.hostname = "controlplane"
     controlplane.vm.network "private_network", ip: settings["network"]["control_ip"]
     if settings["shared_folders"]
@@ -75,6 +87,7 @@ Vagrant.configure("2") do |config|
   (1..NUM_WORKER_NODES).each do |i|
 
     config.vm.define "node0#{i}" do |node|
+      node.vbguest.installer_options = { allow_kernel_upgrade: true }	
       node.vm.hostname = "node0#{i}"
       node.vm.network "private_network", ip: IP_NW + "#{IP_START + i}"
       if settings["shared_folders"]

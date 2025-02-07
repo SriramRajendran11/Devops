@@ -32,15 +32,22 @@ nodes:
     memory: 3172
 # Mount additional shared folders from the host into each virtual machine.
 # Note that the project directory is automatically mounted at /vagrant.
-# shared_folders:
-#   - host_path: ../images
-#     vm_path: /vagrant/images
+#  shared_folders:
+#    - host_path: ./config
+#      vm_path: /vagrant/configs
+#    - host_path: ./scripts
+#      vm_path: /vagrant/scripts
+
 software:
   #box: bento/ubuntu-24.04
-  box: hashicorp-education/ubuntu-24-04 
+  #box: hashicorp-education/ubuntu-24-04 
+  #box: ubuntu/focal64 
+  box: generic/debian12
   calico: 3.26.0
   # To skip the dashboard installation, set its version to an empty value or comment it out:
   dashboard: 2.7.1
   kubernetes: 1.31.5-*
 
-  os: xUbuntu_24.04
+  #os: xUbuntu_24.04
+  os: debian_12
+  #os: ubuntu_20.04
