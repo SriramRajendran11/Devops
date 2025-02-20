@@ -4,7 +4,7 @@ V1.1 - Feb 7 2025
        * Added support for Debian 12 over Ubuntu 24 
        * Note: this will require addition of a vagrant plugin 
 ```
-vagrant plugin install vagrant-vbguest
+    vagrant plugin install vagrant-vbguest
 ```
        * Reduced the number of apt-get update(s)
  

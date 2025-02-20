@@ -5,6 +5,10 @@
 *.tfstate
 *.tfstate.*
 
+#user_data
+user_data
+user_data/* 
+
 # Crash log files
 crash.log
 

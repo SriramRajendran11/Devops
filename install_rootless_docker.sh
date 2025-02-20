@@ -1,4 +1,4 @@
-sudo apt-get update && sudo apt-get install -y uidmap dbus-user-session fuse-overlayfs
+sudo apt-get update && sudo apt-get install -y uidmap iptables dbus-user-session fuse-overlayfs
 #docker is already installed 
 if [ -f /usr/bin/docker ]; then 
 	sudo systemctl stop  --now docker.service docker.socket
