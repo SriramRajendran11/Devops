@@ -1,0 +1,11 @@
+FROM ubuntu:latest
+USER root 
+RUN apt update && apt install  openssh-server openssh-client default-jdk sudo -y
+RUN echo "ubuntu  ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers 
+RUN  echo 'ubuntu:ubuntu' | chpasswd
+RUN service ssh start
+RUN mkdir -p /tmp && chown ubuntu:ubuntu /tmp && chown -R 777 /tmp 
+EXPOSE 22
+CMD ["/usr/sbin/sshd","-D"]
+USER ubuntu 
+
