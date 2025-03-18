@@ -1,13 +1,17 @@
 FROM ubuntu:latest
 USER root 
-RUN apt-get update && apt-get install  curl openssh-server openssh-client default-jdk sudo -y && \
+RUN apt-get update && apt-get install  -y curl git openssh-server openssh-client default-jdk maven gnupg2 pass rng-tools jq -y && \
     ssh-keygen -A && echo "ubuntu  ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && echo 'ubuntu:ubuntu' | chpasswd \
     && mkdir -p /tmp && chown ubuntu:ubuntu /tmp && chown -R 777 /tmp && apt-get clean 
+RUN curl -fsSLo /usr/share/keyrings/docker-archive-keyring.asc  https://download.docker.com/linux/debian/gpg  && curl -L https://github.com/docker/docker-credential-helpers/releases/download/v0.8.2/docker-credential-pass-v0.8.2.linux-amd64 -o /usr/local/bin/docker-credential-pass && chmod +x /usr/local/bin/docker-credential-pass 
+#RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.asc] https://download.docker.com/linux/debian $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list
+#RUN apt-get update && apt-get install -y docker-ce-cli  && apt-get clean 
+COPY --from=docker:dind /usr/local/bin/docker /usr/local/bin/
+COPY ./certs /certs/client 
 USER ubuntu 
-RUN ssh-keygen -q -t rsa -b 4096 -N '' -f ~/.ssh/id_rsa
-RUN ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519
+RUN ssh-keygen -q -t rsa -b 4096 -N '' -f ~/.ssh/id_rsa && ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 
 USER root
-RUN ssh-keygen -q -t rsa -b 4096 -N '' -f ~/.ssh/id_rsa && ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 && mkdir -p /run/sshd && chmod 755 /run/sshd 
+RUN ssh-keygen -q -t rsa -b 4096 -N '' -f ~/.ssh/id_rsa && ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 && ssh-keyscan github.com > /root/.ssh/known_hosts && mkdir -p /run/sshd && chmod 755 /run/sshd 
 EXPOSE 22
 CMD ["/usr/sbin/sshd","-D"]
 
