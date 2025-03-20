@@ -21,4 +21,4 @@ docker run --name jenkins-docker --restart=on-failure --detach --privileged --ne
 docker build -t jenkins-blueocean:2.498 . 
 #
 # start the Jenkins server
-docker run --name jenkins-blueocean --restart=on-failure --detach --network jenkins --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro  -v $HOME:/data  --publish 8080:8080 --publish 50000:50000 jenkins-blueocean:2.498
+docker run --name jenkins-blueocean --restart=on-failure --detach --network jenkins --env DOCKER_HOST=tcp://docker:2376   --env DOCKER_CERT_PATH=/certs/client --env DOCKER_TLS_VERIFY=1   --volume jenkins-data:/var/jenkins_home   --volume jenkins-docker-certs:/certs/client:ro  -v $HOME:/data  -v /tmp:/forcopy --publish 8080:8080 --publish 50000:50000 jenkins-blueocean:2.498
