@@ -1,0 +1,14 @@
+secretGenerator:
+- name: mysql-pass
+  literals:
+  - password=some_password
+resources:
+  - lamp-phpadmin_dep.yaml
+  - lamp-phpadmin_pvc.yaml
+  - lamp-phpadmin_svc.yaml
+  - lamp_dep.yaml
+  - lamp_pvc.yaml
+  - lamp_svc.yaml
+  - mysql_dep.yaml
+  - mysql_pvc.yaml
+  - mysql_svc.yaml

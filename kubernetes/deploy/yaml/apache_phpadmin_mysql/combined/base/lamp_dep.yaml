@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lamp-apache
+  labels:
+    app: lamp-apache
+spec:
+  selector:
+    matchLabels:
+      app: lamp-apache
+      tier: frontend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: lamp-apache
+        tier: frontend
+    spec:
+      containers:
+      - image: php:8.2-apache
+        name: lamp-apache
+        env:
+        - name: PMA_HOST
+          value: lamp-mysql
+        - name: PMA_PORT
+          value: "3306"
+        - name: LAMP_DB_HOST
+          value: lamp-mysql
+        - name: LAMP_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass
+              key: password
+        - name: LAMP_DB_USER
+          value: testuser
+        ports:
+        - containerPort: 80
+          name: lamp-apache
+        volumeMounts:
+        - name: lamp-apache-persistent-storage
+          mountPath: /var/www/html 
+      volumes:
+      - name: lamp-apache-persistent-storage
+        hostPath: 
+          path: /data/devops/kubernetes/deploy/yaml/apache_phpadmin_mysql/combined/base

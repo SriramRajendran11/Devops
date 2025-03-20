@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lamp
+  labels:
+    app: lamp
+spec:
+  selector:
+    matchLabels:
+      app: lamp
+      tier: frontend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: lamp
+        tier: frontend
+    spec:
+      containers:
+      - image: phpmyadmin/phpmyadmin
+        name: lamp
+        env:
+        - name: PMA_HOST
+          value: lamp-mysql
+        - name: PMA_PORT
+          value: "3306"
+        - name: LAMP_DB_HOST
+          value: lamp-mysql
+        - name: LAMP_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass
+              key: password
+        - name: LAMP_DB_USER
+          value: testuser
+        ports:
+        - containerPort: 80
+          name: lamp
+        volumeMounts:
+        - name: lamp-persistent-storage
+          mountPath: /app/files
+      volumes:
+      - name: lamp-persistent-storage
+        persistentVolumeClaim:
+          claimName: lamp-pv-claim
