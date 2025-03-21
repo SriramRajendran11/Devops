@@ -1,0 +1,83 @@
+pipeline {
+    agent {label 'jenkins-slave'}
+    stages {
+stage("Restore npm Packages") {
+    steps {
+			sh 'ls -la'
+            echo 'will do npm install in shell'
+     }
+}
+
+	 stage('Setup NPM and Vagrant Env.') {
+	  parallel { 
+	   stage('npm Install') { 
+            steps {
+                echo 'will do npm install in shell'
+            }
+            } 
+           stage('Vagrant Env. Setup for Infra'){ 
+	    steps { 
+		echo 'sh vagrant plugin install virtualbox_WSL2' 
+                echo 'sh vagrant plugin install vagrant-scp'
+		} 
+           } 
+         } 
+        }
+
+	stage('Build the Application') { 
+		steps { 
+			echo 'sh ng build --configuration production'
+		} 
+	} 
+
+	stage('Run Lint and Prettier') { 
+		parallel { 
+ 	        stage('Lint Checks') { 
+		steps { 
+		   echo 'sh ng add @angular-eslint/schematics' 
+		   echo 'sh npm run lint'
+		}
+		}
+ 	        stage('Pretty Code') { 
+		steps { 
+		   echo 'sh npm run prettier:fix]'  
+		}
+		}
+               }  
+	} 
+	stage ('Deploy Infra') { 
+		steps {
+		echo 'sh vagrant up' 
+		echo 'Deploying infra via vagrant'
+		echo 'bad example - vagrant could be installed in WSL, Docker and/or agent run anywhere' 
+		} 
+	}
+
+	stage ('Deploy Application') { 
+		steps { 
+		echo 'All done'
+		} 
+	} 
+	stage('Test Application') {
+		parallel { 
+ 	        stage('Chrome Testing') { 
+		steps { 
+		   echo 'Test on Chrome Browsers'
+		}
+		}
+ 	        stage('Edge Testing') { 
+		steps { 
+		   echo 'Test on Edge Browsers'
+		}
+		}
+ 	        stage('Firefox Testing') { 
+		steps { 
+		   echo 'Test on Firefox  Browsers'
+		}
+		}
+	
+		} 
+	} 
+ 
+        }
+    }

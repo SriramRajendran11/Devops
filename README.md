@@ -93,20 +93,37 @@ Jan 25 2025 - Added Support for creating a Debian Virtual Box using Terraform
 
 
 ## Folder Structure
+Top level folder structure 
+.
+├── cheatsheets						Contains Cheay Sheets for git, Docker, Kubernetes
+├── docker						Code related to Docker	
+├── dockerfiles_ansible					Using DOcker and Ansible together	
+├── kubernetes						Kubernetes code	
+├── presentations					presentations
+├── SampleCodes						Sample codes that can be resused in Jenkins jobs and pipelines
+├── terraform						Code related to Terraform
+├── vagrant_ansible					Using ansible and vagrant together
+└── vagrant-kubeadm-kubernetes				Provisisoning Kubernetes with 1 master and 2 worker nodes	
+
+
 1. docker
     1.  jenkins - contains instructions on how to build and run jenkins as a docker image
     2.  lamp-dockercompose - A sample LAMP application using docker-compose
     3.  multi-build - Contains example on why we need multi-stage builds
+    4.  samples - Misc. Samples for Docker 
+
 2. dockerfiles_ansible - Build docker images for Ansible. Read the Instructions file found in this directory on how to use it. In particular it build the master/nodes and runs them as docker compose up -d. 
 3. kubernetes
      1. deploy  - contains sample for deploying application using
-          1. yaml - raw deployment using yml/kustomization
-          2. helm - install apps using helm
+          1. yaml - raw deployment using yml/kustomization. There are sub folders here for deploying apache, phpmyadmin and mysql into kubernetes
+          2. helm - install apps using helm 
      2. logging - scripts and yml files to install prometheus/grafana/ELK on minikube
 4. presentations 
 5. vagrant_ansible - Contains information on starting Ansible master and nodes on Separate Oracle Virtual Box instances
 6. vagrant_kubeadm-kubernete - Build a master/2 node Kubernetes cluster using Oracle Virtual Box 
- 
- 
+
+7. cheatsheet  
+8. SampleCodes 
+8. terraform  
 
 		
